@@ -10,6 +10,7 @@ const _tracerName = 'dartastic_otel_libs_app_links';
 APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class AppLinksResult {
+  /// Creates a result.
   const AppLinksResult({
     this.linkKind,
     this.scheme,
@@ -65,8 +66,13 @@ class AppLinksResult {
   final String? errorCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class AppLinksCallResult<T> {
+  /// Creates a call result.
   const AppLinksCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final AppLinksResult? result;
 }
