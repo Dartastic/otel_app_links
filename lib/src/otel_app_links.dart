@@ -1,13 +1,13 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_app_links_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_app_links';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class AppLinksResult {
   const AppLinksResult({
@@ -92,7 +92,7 @@ Future<T> tracedAppLinks<T>({
   final span = _tracer().startSpan(
     'app_links $operation',
     kind: SpanKind.consumer,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
@@ -100,82 +100,84 @@ Future<T> tracedAppLinks<T>({
       final res = r.result!;
       final extras = <Attribute<Object>>[];
       if (res.linkKind != null) {
-        extras.add(OTel.attributeString('app_links.link.kind', res.linkKind!));
+        extras
+            .add(OTelAPI.attributeString('app_links.link.kind', res.linkKind!));
       }
       if (res.scheme != null) {
-        extras.add(OTel.attributeString('app_links.scheme', res.scheme!));
+        extras.add(OTelAPI.attributeString('app_links.scheme', res.scheme!));
       }
       if (res.host != null) {
-        extras.add(OTel.attributeString('app_links.host', res.host!));
+        extras.add(OTelAPI.attributeString('app_links.host', res.host!));
       }
       if (res.path != null) {
-        extras.add(OTel.attributeString('app_links.path', res.path!));
+        extras.add(OTelAPI.attributeString('app_links.path', res.path!));
       }
       if (res.queryParamCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'app_links.query.param_count',
           res.queryParamCount!,
         ));
       }
       if (res.fragmentPresent != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'app_links.fragment.present',
           res.fragmentPresent!,
         ));
       }
       if (res.platform != null) {
-        extras.add(OTel.attributeString('app_links.platform', res.platform!));
+        extras
+            .add(OTelAPI.attributeString('app_links.platform', res.platform!));
       }
       if (res.coldStart != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'app_links.cold_start',
           res.coldStart!,
         ));
       }
       if (res.referrerPackage != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'app_links.referrer.package',
           res.referrerPackage!,
         ));
       }
       if (res.referrerUrl != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'app_links.referrer.url',
           res.referrerUrl!,
         ));
       }
       if (res.deferredDeepLink != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'app_links.deferred',
           res.deferredDeepLink!,
         ));
       }
       if (res.universalLinkMatched != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'app_links.ios.universal_link_matched',
           res.universalLinkMatched!,
         ));
       }
       if (res.androidAppLinksVerified != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'app_links.android.verified',
           res.androidAppLinksVerified!,
         ));
       }
       if (res.errorCode != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'app_links.error.code',
           res.errorCode!,
         ));
         span.setStatus(SpanStatusCode.Error, 'app_links ${res.errorCode}');
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
